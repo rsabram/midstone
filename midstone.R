@@ -127,10 +127,253 @@ all_school_info <- left_join(school_info, testing_sites_clean, by = 'SID')
 # replace NA with 0 for testing information
 all_school_info$number_times_offered[is.na(all_school_info$number_times_offered)] <- 0
 all_school_info$testing_site[is.na(all_school_info$testing_site)] <- 0
+all_school_info$no_seniors_tested[is.na(all_school_info$no_seniors_tested)] <- 0
+all_school_info$pct_tested[is.na(all_school_info$pct_tested)] <- 0
 
+# fix cell that calculated to Inf
+all_school_info[242,14] <- NA
+
+# CBHS is a testing site but has no students who have taken the SAT - code below adds that in 
+all_school_info[156,14] <- 0
+all_school_info[156,13] <- 0
 
 ## START ANALYSIS HERE ->
 
+table(all_school_info$location_type)
+table(all_school_info$rate_overall)
+
+rural_sites <- all_school_info %>% 
+  group_by(location_type) %>% 
+  mutate(location_type_testing_site_count = sum(testing_site, na.rm = TRUE)) %>% 
+  select(location_type, location_type_testing_site_count) %>% 
+  unique()
+
+distict_sites <- all_school_info %>% 
+  group_by(district) %>% 
+  mutate(district_testing_site_count = sum(testing_site, na.rm = TRUE)) %>% 
+  select(district, district_testing_site_count) %>% 
+  unique()
+
+rating_sites <- all_school_info %>% 
+  group_by(rate_overall) %>% 
+  mutate(rate_site_count = sum(testing_site, na.rm = TRUE)) %>% 
+  select(rate_overall, rate_site_count) %>% 
+  unique()
+
+gradrate_sites <- all_school_info %>% 
+  group_by(rate_gradrate) %>% 
+  mutate(gradrate_site_count = sum(testing_site, na.rm = TRUE)) %>% 
+  select(rate_gradrate, gradrate_site_count) %>% 
+  unique()
+
+all_school_info %>% 
+  group_by(testing_site) %>% 
+  summarize(mean(pct_tested, na.rm = TRUE))
+
+averages_by_location <- all_school_info %>% 
+  group_by(location_type) %>% 
+  summarize(
+    mean(pct_frl, na.rm = TRUE), 
+    mean(pct_black, na.rm = TRUE),
+    mean(pct_white, na.rm = TRUE),
+    mean(pct_male, na.rm = TRUE),
+    mean(pct_tested, na.rm = TRUE),
+    mean(erw_mean, na.rm = TRUE),
+    mean(math_mean, na.rm = TRUE),
+    mean(total_mean, na.rm = TRUE),
+    mean(number_times_offered, na.rm = TRUE)
+  ) 
+
+averages_by_location <- averages_by_location[-c(2,4),]
+colnames(averages_by_location) <- c('location_type', 'mean_pct_frl', 'mean_pct_black','mean_pct_white','mean_pct_male','mean_pct_tested', 'mean_erw_score','mean_math_score', 'mean_score', 'mean_times_offered')
+
+## Rural Unknown   Urban 
+## 118       7     106 
+
+## w E i R d anomaly - CBHS offers testing 6 times a year according to the SAT but 0 kids from CBHS have taken the SAT! 
+
+averages_by_testing_site <- all_school_info %>% 
+  group_by(testing_site) %>% 
+  summarize(
+    mean(pct_frl, na.rm = TRUE), 
+    mean(pct_black, na.rm = TRUE),
+    mean(pct_white, na.rm = TRUE),
+    mean(pct_male, na.rm = TRUE),
+    mean(pct_tested, na.rm = TRUE),
+    mean(erw_mean, na.rm = TRUE),
+    mean(math_mean, na.rm = TRUE),
+    mean(total_mean, na.rm = TRUE),
+    mean(number_times_offered, na.rm = TRUE)
+  ) 
+
+colnames(averages_by_testing_site) <- c('testing_site_boolean', 'mean_pct_frl', 'mean_pct_black','mean_pct_white','mean_pct_male','mean_pct_tested', 'mean_erw_score','mean_math_score', 'mean_score', 'mean_times_offered')
+
+averages_by_site_and_location <- all_school_info %>% 
+  group_by(location_type, testing_site) %>% 
+  summarize(
+    mean(pct_frl, na.rm = TRUE), 
+    mean(pct_black, na.rm = TRUE),
+    mean(pct_white, na.rm = TRUE),
+    mean(pct_male, na.rm = TRUE),
+    mean(pct_tested, na.rm = TRUE),
+    mean(erw_mean, na.rm = TRUE),
+    mean(math_mean, na.rm = TRUE),
+    mean(total_mean, na.rm = TRUE),
+    mean(number_times_offered, na.rm = TRUE)
+  ) 
+averages_by_site_and_location <- averages_by_site_and_location[-c(3,4,7),]
+colnames(averages_by_site_and_location) <- c('location_type','testing_site_boolean', 'mean_pct_frl', 'mean_pct_black','mean_pct_white','mean_pct_male','mean_pct_tested', 'mean_erw_score','mean_math_score', 'mean_score', 'mean_times_offered')
+
+# Convert ratings to numeric values
+
+all_school_info <- all_school_info %>% 
+  mutate(
+    overall_rating = case_when(
+      rate_overall == 'Unsatisfactory' ~ 1,
+      rate_overall == 'Below Average' ~ 2,
+      rate_overall == 'Average' ~ 3,
+      rate_overall == 'Good' ~ 4,
+      rate_overall == 'Excellent' ~ 5
+    )
+  ) %>% 
+  mutate(
+    achievement_rating = case_when(
+      rate_achievement == 'Unsatisfactory' ~ 1,
+      rate_achievement == 'Below Average' ~ 2,
+      rate_achievement == 'Average' ~ 3,
+      rate_achievement == 'Good' ~ 4,
+      rate_achievement == 'Excellent' ~ 5
+    )
+  ) %>% 
+  mutate(
+    gradrate_rating = case_when(
+      rate_gradrate == 'Unsatisfactory' ~ 1,
+      rate_gradrate == 'Below Average' ~ 2,
+      rate_gradrate == 'Average' ~ 3,
+      rate_gradrate == 'Good' ~ 4,
+      rate_gradrate == 'Excellent' ~ 5
+    )
+  )
+
+# analysis by rating
+averages_by_school_rating <- all_school_info %>% 
+  group_by(overall_rating) %>% 
+  summarize(
+    mean(pct_frl, na.rm = TRUE), 
+    mean(pct_black, na.rm = TRUE),
+    mean(pct_white, na.rm = TRUE),
+    mean(pct_male, na.rm = TRUE),
+    mean(pct_tested, na.rm = TRUE),
+    mean(erw_mean, na.rm = TRUE),
+    mean(math_mean, na.rm = TRUE),
+    mean(total_mean, na.rm = TRUE),
+    mean(number_times_offered, na.rm = TRUE)
+  ) 
+
+colnames(averages_by_school_rating) <- c('school_rating', 'mean_pct_frl', 'mean_pct_black','mean_pct_white','mean_pct_male','mean_pct_tested', 'mean_erw_score','mean_math_score', 'mean_score', 'mean_times_offered')
+averages_by_school_rating <- averages_by_school_rating[-c(6),]
+
+averages_by_gradrate_rating <- all_school_info %>% 
+  group_by(gradrate_rating) %>% 
+  summarize(
+    mean(pct_frl, na.rm = TRUE), 
+    mean(pct_black, na.rm = TRUE),
+    mean(pct_white, na.rm = TRUE),
+    mean(pct_male, na.rm = TRUE),
+    mean(pct_tested, na.rm = TRUE),
+    mean(erw_mean, na.rm = TRUE),
+    mean(math_mean, na.rm = TRUE),
+    mean(total_mean, na.rm = TRUE),
+    mean(number_times_offered, na.rm = TRUE)
+  ) 
+colnames(averages_by_gradrate_rating) <- c('school_gradrate_rating', 'mean_pct_frl', 'mean_pct_black','mean_pct_white','mean_pct_male','mean_pct_tested', 'mean_erw_score','mean_math_score', 'mean_score', 'mean_times_offered')
+
+# lets plot
+
+averages_by_site_and_location_combined <- averages_by_site_and_location %>% 
+  mutate(type = 0) %>% 
+  ungroup() %>% 
+  select(-location_type, -testing_site_boolean) %>% 
+  select(type, mean_pct_frl, mean_pct_black, mean_pct_tested, mean_erw_score, mean_math_score, mean_score)
+
+averages_by_site_and_location_combined$type[1] <- "Rural, No Testing Sites"
+averages_by_site_and_location_combined$type[2] <- "Rural, Testing Sites"
+averages_by_site_and_location_combined$type[3] <- "Urban, No Testing Sites"
+averages_by_site_and_location_combined$type[4] <- "Urban, Testing Sites"
+
+# reshape it - by subgroup rural/urban and testing/no testing
+reshape_pcts <- gather(averages_by_site_and_location_combined, outcome, value, mean_pct_frl:mean_pct_tested) %>% 
+  select(type, outcome, value)
+reshape_scores <- gather(averages_by_site_and_location_combined, outcome, value, mean_erw_score:mean_math_score) %>% 
+  select(type, outcome, value)
+
+reshape_scores %>% 
+  ggplot(
+    aes(x = outcome, y = value, group=type, fill = type)
+  ) +
+  geom_bar(
+    stat = "identity",
+    position = position_dodge()
+  )  +
+  labs(x = element_blank(), y = 'Score', title = 'Average Score on SAT Tests by Subgroup')  +
+  ylim(0, 800) +
+  scale_x_discrete(labels=c("mean_erw_score" = "Reading and Writing", "mean_math_score" = "Math")) +
+  scale_fill_brewer(name = 'Subgroup', palette = "Paired")
+)
+
+reshape_pcts %>% 
+  ggplot(
+    aes(x = outcome, y = value, group=type, fill = type)
+  ) +
+  geom_bar(
+    stat = "identity",
+    position = position_dodge()
+  )  +
+  labs(x = element_blank(), y = 'Percentage', title = 'Demographic Groups')  +
+  ylim(0, .70) +
+  scale_x_discrete(labels=c("mean_pct_black" = "Black Students", 
+                            "mean_pct_frl" = "Free & Reduced Lunch",
+                            "mean_pct_tested" = "Took the SAT")) +
+  scale_fill_brewer(name = 'Subgroup', palette = "Paired")
 
 
+# reshape it by school rating
+averages_by_school_rating$school_rating <- as.character(averages_by_school_rating$school_rating)
+
+rating_reshape_pcts <- gather(averages_by_school_rating, outcome, value, mean_pct_frl:mean_pct_tested) %>% 
+  select(school_rating, outcome, value) %>% 
+  filter(outcome != 'mean_pct_white')
+
+rating_reshape_scores <- gather(averages_by_school_rating, outcome, value, mean_erw_score:mean_math_score) %>% 
+  select(school_rating, outcome, value)
+
+rating_reshape_scores %>% 
+  ggplot(
+    aes(x = outcome, y = value, group=school_rating, fill = school_rating)
+  ) +
+  geom_bar(
+    stat = "identity",
+    position = position_dodge()
+  )  +
+  labs(x = element_blank(), y = 'Score', title = 'Average Score on SAT Tests by School Rating')  +
+  ylim(0, 800) +
+  scale_x_discrete(labels=c("mean_erw_score" = "Reading and Writing", "mean_math_score" = "Math")) +
+  scale_fill_brewer(name = 'Overall Rating', palette = "Spectral", labels=c("Unsatisfactory", "Below Average", "Average", "Good","Excellent"))
+)
+
+rating_reshape_pcts %>% 
+  ggplot(
+    aes(x = outcome, y = value, group=school_rating, fill = school_rating)
+  ) +
+  geom_bar(
+    stat = "identity",
+    position = position_dodge()
+  )  +
+  labs(x = element_blank(), y = 'Percentage', title = 'Demographic Groups by School Rating')  +
+  ylim(0, .8) +
+  scale_x_discrete(labels=c("mean_pct_black" = "Black", 
+                            "mean_pct_frl" = "Free & Reduced Lunch",
+                            "mean_pct_tested" = "Took the SAT",
+                            "mean_pct_male" = "Male")) +
+  scale_fill_brewer(name = 'Overall Rating', palette = "Spectral", labels=c("Unsatisfactory", "Below Average", "Average", "Good","Excellent"))
 
