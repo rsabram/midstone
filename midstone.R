@@ -89,8 +89,8 @@ school_info <- school_info %>%
   select(SID, school, district, location_type, total_enrollment, pct_male, pct_black, pct_white, pct_frl, rate_overall, rate_achievement, rate_gradrate, no_seniors_tested, pct_tested, erw_mean, math_mean, total_mean)
 
 school_info$district[156] <- 'Marion 10'
-# merge school testing sites with school info (?)
 
+# merge school testing sites with school info (?)
 sid <- school_info %>% 
   select(SID, school, district)
 
@@ -138,6 +138,41 @@ all_school_info[156,14] <- 0
 all_school_info[156,13] <- 0
 
 ## START ANALYSIS HERE ->
+
+# Convert ratings to numeric values
+
+all_school_info <- all_school_info %>% 
+  mutate(
+    overall_rating = case_when(
+      rate_overall == 'Unsatisfactory' ~ 1,
+      rate_overall == 'Below Average' ~ 2,
+      rate_overall == 'Average' ~ 3,
+      rate_overall == 'Good' ~ 4,
+      rate_overall == 'Excellent' ~ 5
+    )
+  ) %>% 
+  mutate(
+    achievement_rating = case_when(
+      rate_achievement == 'Unsatisfactory' ~ 1,
+      rate_achievement == 'Below Average' ~ 2,
+      rate_achievement == 'Average' ~ 3,
+      rate_achievement == 'Good' ~ 4,
+      rate_achievement == 'Excellent' ~ 5
+    )
+  ) %>% 
+  mutate(
+    gradrate_rating = case_when(
+      rate_gradrate == 'Unsatisfactory' ~ 1,
+      rate_gradrate == 'Below Average' ~ 2,
+      rate_gradrate == 'Average' ~ 3,
+      rate_gradrate == 'Good' ~ 4,
+      rate_gradrate == 'Excellent' ~ 5
+    )
+  )
+
+# add row that averages each column
+#all_school_info <- all_school_info %>%
+#  bind_rows(summarise_all(., funs(if(is.numeric(.)) mean(., na.rm = TRUE) else "Average")))
 
 table(all_school_info$location_type)
 table(all_school_info$rate_overall)
@@ -203,10 +238,13 @@ averages_by_testing_site <- all_school_info %>%
     mean(erw_mean, na.rm = TRUE),
     mean(math_mean, na.rm = TRUE),
     mean(total_mean, na.rm = TRUE),
-    mean(number_times_offered, na.rm = TRUE)
+    mean(number_times_offered, na.rm = TRUE),
+    mean(overall_rating, na.rm = TRUE),
+    mean(achievement_rating, na.rm = TRUE),
+    mean(gradrate_rating, na.rm =TRUE)
   ) 
 
-colnames(averages_by_testing_site) <- c('testing_site_boolean', 'mean_pct_frl', 'mean_pct_black','mean_pct_white','mean_pct_male','mean_pct_tested', 'mean_erw_score','mean_math_score', 'mean_score', 'mean_times_offered')
+colnames(averages_by_testing_site) <- c('testing_site_boolean', 'mean_pct_frl', 'mean_pct_black','mean_pct_white','mean_pct_male','mean_pct_tested', 'mean_erw_score','mean_math_score', 'mean_score', 'mean_times_offered',"mean_overall_rating","mean_achievement_rating","mean_gradrate_rating")
 
 averages_by_site_and_location <- all_school_info %>% 
   group_by(location_type, testing_site) %>% 
@@ -223,37 +261,6 @@ averages_by_site_and_location <- all_school_info %>%
   ) 
 averages_by_site_and_location <- averages_by_site_and_location[-c(3,4,7),]
 colnames(averages_by_site_and_location) <- c('location_type','testing_site_boolean', 'mean_pct_frl', 'mean_pct_black','mean_pct_white','mean_pct_male','mean_pct_tested', 'mean_erw_score','mean_math_score', 'mean_score', 'mean_times_offered')
-
-# Convert ratings to numeric values
-
-all_school_info <- all_school_info %>% 
-  mutate(
-    overall_rating = case_when(
-      rate_overall == 'Unsatisfactory' ~ 1,
-      rate_overall == 'Below Average' ~ 2,
-      rate_overall == 'Average' ~ 3,
-      rate_overall == 'Good' ~ 4,
-      rate_overall == 'Excellent' ~ 5
-    )
-  ) %>% 
-  mutate(
-    achievement_rating = case_when(
-      rate_achievement == 'Unsatisfactory' ~ 1,
-      rate_achievement == 'Below Average' ~ 2,
-      rate_achievement == 'Average' ~ 3,
-      rate_achievement == 'Good' ~ 4,
-      rate_achievement == 'Excellent' ~ 5
-    )
-  ) %>% 
-  mutate(
-    gradrate_rating = case_when(
-      rate_gradrate == 'Unsatisfactory' ~ 1,
-      rate_gradrate == 'Below Average' ~ 2,
-      rate_gradrate == 'Average' ~ 3,
-      rate_gradrate == 'Good' ~ 4,
-      rate_gradrate == 'Excellent' ~ 5
-    )
-  )
 
 # analysis by rating
 averages_by_school_rating <- all_school_info %>% 
@@ -377,3 +384,24 @@ rating_reshape_pcts %>%
                             "mean_pct_male" = "Male")) +
   scale_fill_brewer(name = 'Overall Rating', palette = "Spectral", labels=c("Unsatisfactory", "Below Average", "Average", "Good","Excellent"))
 
+## attempting to test for statistical significance
+
+testing_sites <- all_school_info %>% 
+  filter(testing_site == 1)
+
+not_testing_sites <- all_school_info %>% 
+  filter(testing_site == 0)
+
+t.test(not_testing_sites$total_enrollment, testing_sites$total_enrollment)
+
+t.test(not_testing_sites$pct_male, testing_sites$pct_male)
+
+t.test(not_testing_sites$pct_black, testing_sites$pct_black)
+
+t.test(not_testing_sites$pct_frl, testing_sites$pct_frl)
+
+t.test(not_testing_sites$erw_mean, testing_sites$erw_mean)
+
+t.test(not_testing_sites$pct_tested, testing_sites$pct_tested)
+
+t.test(not_testing_sites$gradrate_rating, testing_sites$gradrate_rating)
