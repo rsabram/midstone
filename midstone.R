@@ -300,9 +300,8 @@ colnames(averages_by_gradrate_rating) <- c('school_gradrate_rating', 'mean_pct_f
 averages_by_site_and_location_combined <- averages_by_site_and_location %>% 
   mutate(type = 0) %>% 
   ungroup() %>% 
-  select(-location_type, -testing_site_boolean) %>% 
-  select(type, mean_pct_frl, mean_pct_black, mean_pct_tested, mean_erw_score, mean_math_score, mean_score)
-
+  select(-location_type, -testing_site_boolean) 
+  
 averages_by_site_and_location_combined$type[1] <- "Rural, No Testing Sites"
 averages_by_site_and_location_combined$type[2] <- "Rural, Testing Sites"
 averages_by_site_and_location_combined$type[3] <- "Urban, No Testing Sites"
@@ -400,8 +399,8 @@ t.test(not_testing_sites$pct_black, testing_sites$pct_black)
 
 t.test(not_testing_sites$pct_frl, testing_sites$pct_frl)
 
-t.test(not_testing_sites$erw_mean, testing_sites$erw_mean)
-
 t.test(not_testing_sites$pct_tested, testing_sites$pct_tested)
 
 t.test(not_testing_sites$gradrate_rating, testing_sites$gradrate_rating)
+
+
