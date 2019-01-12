@@ -4,6 +4,7 @@
 
 # DS
 /.DS_Store
+/shiny_app_midstone/.DS_Store
 
 # History files
 .Rhistory
