@@ -1,5 +1,6 @@
 # data
 /data
+/shiny_app_midstone/data
 
 # DS
 /.DS_Store
