@@ -21,8 +21,6 @@ shinyServer(function(input, output) {
                                 "mean_pct_frl" = "Free & Reduced Lunch",
                                 "mean_pct_tested" = "Took the SAT")) +
       scale_fill_brewer(name = 'Subgroup', palette = "Paired") 
-      
-    
   })
   
   output$table <- renderTable(
@@ -31,4 +29,14 @@ shinyServer(function(input, output) {
       filter(outcome %in% input$selectVar) %>% 
       arrange(type)
     )
+  
+  output$school_data <- renderDataTable({ 
+    all_school_info
+    },
+    options = list(
+      autoWidth = TRUE,
+      columnDefs = list(list(width = '30%', targets = 0))
+    ))
+  
+                                         
 })

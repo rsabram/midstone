@@ -1,4 +1,4 @@
-setwd('/Users/rabram/Desktop/NSS/midstone')
+setwd('/Users/rabram/Desktop/NSS/sat_testing_locations_in_south_carolina')
 library(tidyverse)
 library(ggplot2)
 library(fuzzyjoin)
@@ -238,7 +238,7 @@ averages_by_testing_site <- all_school_info %>%
     mean(erw_mean, na.rm = TRUE),
     mean(math_mean, na.rm = TRUE),
     mean(total_mean, na.rm = TRUE),
-    mean(number_times_offered, na.rm = TRUE),
+    mean(total_, na.rm = TRUE),
     mean(overall_rating, na.rm = TRUE),
     mean(achievement_rating, na.rm = TRUE),
     mean(gradrate_rating, na.rm =TRUE)
@@ -403,4 +403,80 @@ t.test(not_testing_sites$pct_tested, testing_sites$pct_tested)
 
 t.test(not_testing_sites$gradrate_rating, testing_sites$gradrate_rating)
 
+all_school_info %>% 
+  group_by(testing_site)
+  summarize(
+    mean(pct_frl, na.rm = TRUE), 
+    mean(pct_black, na.rm = TRUE),
+    mean(pct_white, na.rm = TRUE),
+    mean(pct_male, na.rm = TRUE),
+    mean(pct_tested, na.rm = TRUE),
+    mean(erw_mean, na.rm = TRUE),
+    mean(math_mean, na.rm = TRUE),
+    mean(total_mean, na.rm = TRUE),
+    mean(total_enrollment, na.rm = TRUE),
+    mean(overall_rating, na.rm = TRUE),
+    mean(achievement_rating, na.rm = TRUE),
+    mean(gradrate_rating, na.rm =TRUE)
+  )
+  
+  averages_by_testing_site <- all_school_info %>% 
+    group_by(testing_site) %>% 
+    summarize(
+      mean(pct_frl, na.rm = TRUE), 
+      mean(pct_black, na.rm = TRUE),
+      mean(pct_white, na.rm = TRUE),
+      mean(pct_male, na.rm = TRUE),
+      mean(pct_tested, na.rm = TRUE),
+      mean(erw_mean, na.rm = TRUE),
+      mean(math_mean, na.rm = TRUE),
+      mean(total_mean, na.rm = TRUE),
+      mean(total_enrollment, na.rm = TRUE),
+      mean(overall_rating, na.rm = TRUE),
+      mean(achievement_rating, na.rm = TRUE),
+      mean(gradrate_rating, na.rm =TRUE)
+    ) 
+  
+colnames(averages_by_testing_site) <- c('testing_site_boolean', 'pct_frl', 'pct_black','pct_white','pct_male','pct_tested', 'erw_score','math_score', 'total_score', 'total_enrollment',"overall_rating","achievement_rating","gradrate_rating")
+  
+averages_by_testing_site <- data.frame(t(averages_by_testing_site))
+averages_by_testing_site <- averages_by_testing_site[-1,]
 
+averages_by_testing_site <- cbind(newColName = rownames(averages_by_testing_site), averages_by_testing_site)
+rownames(averages_by_testing_site) <- 1:nrow(averages_by_testing_site)
+
+colnames(averages_by_testing_site) <- c("variable","mean_not_testing_sites","mean_testing_sites")
+
+
+t.test(not_testing_sites$gradrate_rating, testing_sites$gradrate_rating)[['p.value']]
+
+t_testing <- function(var1) {
+  df1 <- not_testing_sites
+  df2 <- testing_sites
+  p_value <- t.test(df1[[var1]], df2[[var1]])[['p.value']]
+  return(p_value)
+}  
+
+averages_by_testing_site[1,4] <- t_testing('pct_frl') 
+averages_by_testing_site[2,4] <- t_testing('pct_black') 
+averages_by_testing_site[3,4] <- t_testing('pct_white') 
+averages_by_testing_site[4,4] <- t_testing('pct_male') 
+averages_by_testing_site[5,4] <- t_testing('pct_tested') 
+averages_by_testing_site[6,4] <- t_testing('erw_mean') 
+averages_by_testing_site[7,4] <- t_testing('math_mean') 
+averages_by_testing_site[8,4] <- t_testing('total_mean') 
+averages_by_testing_site[9,4] <- t_testing('total_enrollment') 
+averages_by_testing_site[10,4] <- t_testing('overall_rating') 
+averages_by_testing_site[11,4] <- t_testing('achievement_rating') 
+averages_by_testing_site[12,4] <- t_testing('gradrate_rating') 
+
+colnames(averages_by_testing_site) <- c("variable","mean_not_testing_sites","mean_testing_sites","p_value")
+
+averages_by_testing_site <- averages_by_testing_site %>% 
+  mutate(p_significance = case_when(
+    p_value < 0.05 ~ "Significant",
+    p_value >= 0.05 ~ "Not Significant"
+  ))
+
+
+all_school_info <- na.omit(all_school_info)
