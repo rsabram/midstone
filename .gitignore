@@ -1,10 +1,10 @@
 # data
 /data
-/shiny_app_midstone/data
+/exploring_sat_testing_locations_in_south_carolina/data
 
 # DS
 /.DS_Store
-/shiny_app_midstone/.DS_Store
+/exploring_sat_testing_locations_in_south_carolina/.DS_Store
 
 # History files
 .Rhistory
