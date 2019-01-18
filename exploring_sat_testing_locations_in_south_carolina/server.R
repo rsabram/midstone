@@ -30,13 +30,57 @@ shinyServer(function(input, output) {
       arrange(type)
     )
   
-  output$school_data <- renderDataTable({ 
-    all_school_info
-    },
+  output$school_data <- renderDataTable(
+    all_school_info,
     options = list(
-      autoWidth = TRUE,
-      columnDefs = list(list(width = '30%', targets = 0))
-    ))
+      columnDefs = list(list(width = '30%', targets = list(0))),
+      autoWidth=TRUE,
+      scrollX=TRUE
+    )
+  )
+
+  
+  
+  output$testing_average <- renderValueBox(valueBox(
+    testing_site_t_tests %>% 
+      filter(variable %in% input$ttestVar) %>% 
+      select(mean_not_testing_sites),
+     "Average for Non-Testing Sites", icon = icon("chalkboard"), color = "green"
+  ))
+  
+  output$not_testing_average <- renderValueBox(valueBox(
+    testing_site_t_tests %>% 
+      filter(variable %in% input$ttestVar) %>% 
+      select(mean_testing_sites), 
+    "Average for Testing Sites", icon = icon("chalkboard-teacher"), color = "green"
+  ))
+  
+  output$pvalue <- renderValueBox(valueBox(
+    testing_site_t_tests %>% 
+      filter(variable %in% input$ttestVar) %>% 
+      select(p_value), 
+    "P-Value", icon = icon("laptop"), color = "green"
+  ))
+  
+  output$ttest <-renderValueBox({
+    t <- testing_site_t_tests %>% 
+      filter(variable %in% input$ttestVar) %>% 
+      select(p_significance)
+    
+    if (t == 'Significant'){
+    valueBox(testing_site_t_tests %>% 
+               filter(variable %in% input$ttestVar) %>% 
+               select(p_significance), 
+             "T-Test Result", icon = icon("chart-line"), color = "green")
+    }
+    else {
+    
+    valueBox(testing_site_t_tests %>% 
+      filter(variable %in% input$ttestVar) %>% 
+      select(p_significance), 
+    "T-Test Result", icon = icon("chart-line"), color = "red")
+    }
+  })
   
                                          
 })

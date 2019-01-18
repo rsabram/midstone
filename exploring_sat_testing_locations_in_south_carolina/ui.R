@@ -44,19 +44,22 @@ dashboardPage(
               ),
       tabItem(tabName = "t_tests",
               fluidPage(
-                fluidRow(selectInput("select", label = h3("Select a variable:"), 
-                            choices = list("Total SAT Score" = "total_mean", "Reading SAT Score" = "erw_mean", "Math SAT Score" = "math_mean", "Total Enrollment" = "total_enrollment", "Male Student Percentage" = "pct_male", "Black Student Percentage" = "pct_black", "White Student Percentage" = "pct_white", "Percentage of Students Receiving Free or Reduced Lunch" = "pct_frl", "Percentage of Seniors who Took the SAT" = "pct_tested", "Overall School Rating" = "overall_rating", "School Achievement Rating" = "achievement_rating", "School Graduation Rate Rating" = "gradrate_rating"), 
-                            selected = 1)
+                fluidRow(selectInput("ttestVar", label = h3("Select a variable:"), 
+                            choices = list("Total SAT Score" = "total_score", "Reading SAT Score" = "erw_score", "Math SAT Score" = "math_score", "Total Enrollment" = "total_enrollment", "Male Student Percentage" = "pct_male", "Black Student Percentage" = "pct_black", "White Student Percentage" = "pct_white", "Percentage of Students Receiving Free or Reduced Lunch" = "pct_frl", "Percentage of Seniors who Took the SAT" = "pct_tested", "Overall School Rating" = "overall_rating", "School Achievement Rating" = "achievement_rating", "School Graduation Rate Rating" = "gradrate_rating"), 
+                            selected = 1), color = "green"
               ),
-              fluidRow(column(4,actionButton("action", label = "Run T-Test")
-              )),
-              fluidRow(column(8,print(h2("Variable:")))),
-              fluidRow(column(8,print(h2("Average for Non-Testing Sites:")))),
-              fluidRow(column(8,print(h2("Average for Testing Sites:")))),
-              fluidRow(column(8,print(h2("P-Value:"))))
+              fluidRow(),
+              fluidRow(valueBoxOutput("testing_average", width = 8)),
+              fluidRow(valueBoxOutput("not_testing_average", width = 8)),
+              fluidRow(valueBoxOutput("pvalue", width = 8)),
+              fluidRow(valueBoxOutput("ttest", width = 8))
               )),
       tabItem(tabName = "schools",
-              fluidRow(dataTableOutput("school_data"))
+              fluidRow(
+                column(12,
+                       dataTableOutput("school_data")
+                       )
+              )
       ),
       tabItem(tabName = "contact")
     )

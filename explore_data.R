@@ -480,3 +480,20 @@ averages_by_testing_site <- averages_by_testing_site %>%
 
 
 all_school_info <- na.omit(all_school_info)
+
+testing_site_t_tests <- averages_by_testing_site
+
+testing_site_t_tests %>% 
+  filter(variable == 'pct_frl') %>% 
+  select(mean_not_testing_sites)
+
+testing_site_t_tests$mean_not_testing_sites<-testing_site_t_tests$mean_not_testing_sites %>% 
+  round(4)
+
+testing_site_t_tests$mean_testing_sites<-testing_site_t_tests$mean_testing_sites %>% 
+  round(4)
+
+testing_site_t_tests$p_value<-testing_site_t_tests$p_value %>% 
+  round(6)
+
+saveRDS(testing_site_t_tests, "data/t_tests.RDS")

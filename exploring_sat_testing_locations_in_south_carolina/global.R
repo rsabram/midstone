@@ -7,7 +7,7 @@ library(plotly)
 testing_sites <- readRDS('./data/testing_sites.RDS')
 not_testing_sites <- readRDS('./data/not_testing_sites.RDS')
 averages_by_site_and_location <- readRDS('./data/averages_by_site_and_location.RDS')
-testing_site_t_tests <- readRDS('./data/testing_site_t_tests.RDS')
+testing_site_t_tests <- readRDS('./data/t_tests.RDS')
 all_school_info <- readRDS("./data/all_school_info.RDS")
 
 all_school_info <- all_school_info %>% 
