@@ -73,8 +73,8 @@ dashboardPage(
       tabItem(tabName = "t_tests",
               fluidPage(
                 sidebarLayout(
-                  sidebarPanel(h3('Run a t-test to determine if there is a statistically significant difference in demographic groups, school quality, or SAT scores for high schools that are testing sites vs. those that are not.'),
-                  selectInput("ttestVar", label = h3("Select a variable:"), 
+                  sidebarPanel(h4('Run a t-test to determine if there is a statistically significant difference in demographic groups, school quality, or SAT scores for high schools that are testing sites vs. those that are not.'),
+                  selectInput("ttestVar", label = ("Select a variable:"), 
                             choices = list("Total SAT Score" = "total_score", "Reading SAT Score" = "erw_score", "Math SAT Score" = "math_score", "Total Enrollment" = "total_enrollment", "Male Student Percentage" = "pct_male", "Black Student Percentage" = "pct_black", "White Student Percentage" = "pct_white", "Percentage of Students Receiving Free or Reduced Lunch" = "pct_frl", "Percentage of Seniors who Took the SAT" = "pct_tested", "Overall School Rating" = "overall_rating", "School Achievement Rating" = "achievement_rating", "School Graduation Rate Rating" = "gradrate_rating"), 
                             selected = 1), color = "green", width = 8
               ),
