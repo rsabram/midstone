@@ -6,15 +6,13 @@ dashboardPage(
   dashboardSidebar(
     width = 300,
     sidebarMenu(
-      menuItem("Overview", tabName = "overview", icon = icon("chalkboard-teacher")),
       menuItem("School Data", tabName = "schools", icon = icon('database')),
       menuItem("Comparing Rural vs. Urban Testing Sites", tabName = "rural_v_urban", icon = icon("school")),
       menuItem("Statistical Significance", tabName = "t_tests", icon = icon("chart-line")),
-      menuItem("Contact", tabName = "contact", icon = icon('envelope'))
+      menuItem("Contact Me", tabName = "contact", icon = icon('envelope'))
     )),
   dashboardBody(
     tabItems(
-      tabItem(tabName = "overview"),
       tabItem(tabName = "rural_v_urban",
               title = "title",
               status = "primary", solidHeader = TRUE, width=3,
@@ -49,10 +47,10 @@ dashboardPage(
                             selected = 1), color = "green"
               ),
               fluidRow(),
-              fluidRow(valueBoxOutput("testing_average", width = 8)),
-              fluidRow(valueBoxOutput("not_testing_average", width = 8)),
-              fluidRow(valueBoxOutput("pvalue", width = 8)),
-              fluidRow(valueBoxOutput("ttest", width = 8))
+              fluidRow(valueBoxOutput("testing_average", width = 6)),
+              fluidRow(valueBoxOutput("not_testing_average", width = 6)),
+              fluidRow(valueBoxOutput("pvalue", width = 6)),
+              fluidRow(valueBoxOutput("ttest", width = 6))
               )),
       tabItem(tabName = "schools",
               fluidRow(
@@ -61,7 +59,12 @@ dashboardPage(
                        )
               )
       ),
-      tabItem(tabName = "contact")
+      tabItem(tabName = "contact",
+              h3('Rachael Abram'),
+              h4(email <- a("Email", href="mailto:rachaelshore@gmail.com?Subject=SAT%20Testing%20Site%20Analysis%20App", target="_blank")),
+              h4(linkedin <- a("LinkedIn", href="https://www.linkedin.com/in/rsabram/", target="_blank")),
+              h4(github <- a("GitHub", href="https://github.com/rsabram", target="_blank"))
     )
   )
+)
 )

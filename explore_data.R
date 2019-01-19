@@ -479,21 +479,46 @@ averages_by_testing_site <- averages_by_testing_site %>%
   ))
 
 
-all_school_info <- na.omit(all_school_info)
-
 testing_site_t_tests <- averages_by_testing_site
 
 testing_site_t_tests %>% 
   filter(variable == 'pct_frl') %>% 
   select(mean_not_testing_sites)
 
-testing_site_t_tests$mean_not_testing_sites<-testing_site_t_tests$mean_not_testing_sites %>% 
-  round(4)
-
-testing_site_t_tests$mean_testing_sites<-testing_site_t_tests$mean_testing_sites %>% 
-  round(4)
 
 testing_site_t_tests$p_value<-testing_site_t_tests$p_value %>% 
   round(6)
 
-saveRDS(testing_site_t_tests, "data/t_tests.RDS")
+testing_site_t_tests[1:5,2:3] <- testing_site_t_tests[1:5,2:3] * 100
+
+testing_site_t_tests$mean_not_testing_sites<-testing_site_t_tests$mean_not_testing_sites %>% 
+  round(2)
+
+testing_site_t_tests$mean_testing_sites<-testing_site_t_tests$mean_testing_sites %>% 
+  round(2)
+
+saveRDS(testing_site_t_tests, "data/testing_site_t_tests.RDS")
+
+shiny_dt <- all_school_info %>% 
+  select(school, district, location_type, total_enrollment, pct_frl, pct_tested, testing_site) %>% 
+  na.omit()
+
+shiny_dt$testing_site <- mapply(gsub, pattern = "1", replacement = TRUE, shiny_dt$testing_site)
+shiny_dt$testing_site <- mapply(gsub, pattern = "0", replacement = FALSE, shiny_dt$testing_site)
+
+shiny_dt <- shiny_dt %>% 
+  mutate(pct_frl = pct_frl *100) %>% 
+  mutate(pct_tested = pct_tested * 100) 
+
+shiny_dt$pct_frl <- shiny_dt$pct_frl %>% 
+  round(2)
+
+shiny_dt$pct_tested <- shiny_dt$pct_tested %>% 
+  round(2)
+
+colnames(shiny_dt) <- c('School','District','Location Type','Total Enrollment','Percent Free/Reduced Lunch','Percent Tested','SAT Testing Site')
+
+reshape_pcts[,3] <- reshape_pcts[,3] * 100
+
+saveRDS(reshape_pcts, "data/averages_by_site_and_location.RDS")
+

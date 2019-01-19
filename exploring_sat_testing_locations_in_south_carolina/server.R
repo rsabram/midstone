@@ -1,4 +1,3 @@
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
    
   output$sites <- renderPlot({
@@ -14,7 +13,7 @@ shinyServer(function(input, output) {
         position = position_dodge()
       )  +
       labs(x = element_blank(), y = 'Percentage', title = 'Demographic Groups')  +
-      ylim(0, .70) +
+      ylim(0, 70) +
       scale_x_discrete(labels=c("mean_pct_black" = "Black Students", 
                                 "mean_pct_white" = "White Students",
                                 "mean_pct_male" = "Male Students",
@@ -33,13 +32,13 @@ shinyServer(function(input, output) {
   output$school_data <- renderDataTable(
     all_school_info,
     options = list(
-      columnDefs = list(list(width = '30%', targets = list(0))),
+      columnDefs = list(list(width = '250px', targets = list(0)),
+                        list(width = '100px', targets = list(1))),
       autoWidth=TRUE,
       scrollX=TRUE
     )
   )
 
-  
   
   output$testing_average <- renderValueBox(valueBox(
     testing_site_t_tests %>% 
