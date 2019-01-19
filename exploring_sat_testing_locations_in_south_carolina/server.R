@@ -80,6 +80,14 @@ shinyServer(function(input, output) {
     "T-Test Result", icon = icon("chart-line"), color = "red")
     }
   })
-  
-                                         
+
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("data-", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(all_school_info, file)
+    }
+  )
 })
+                                        
