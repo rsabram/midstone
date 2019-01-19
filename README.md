@@ -21,3 +21,6 @@ Based on my experience and prior knowledge, I would hypothesize that SAT testing
 - Low special education population
 - Low free and reduced lunch population
 - Low unemployment rate
+
+### Shiny Dashboard
+View and interact with the Shiny Dashboard [here](https://rabram.shinyapps.io/exploring_sat_testing_locations_in_south_carolina/).
