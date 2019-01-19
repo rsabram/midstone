@@ -22,7 +22,5 @@ Based on my experience and prior knowledge, I would hypothesize that SAT testing
 - Low free and reduced lunch population
 - Low unemployment rate
 
-### Known Issues and Challenges
-
-- The SAT labels testing centers by their own 6-digit code called a CEEB (College Entrance Examination Board) from the Educational Testing Service. However, South Carolina consistently refers to their schools by a 7-digit state-assigned ID number. I’ll need to convert CEEB to State ID in order to merge data frames, and I’ll likely have to match these along a string match for the names of the high schools.
-- Exporting data from Census Website in format/with information I need in an understandable format.
+### Shiny Dashboard
+View and interact with the Shiny Dashboard [here](https://rabram.shinyapps.io/exploring_sat_testing_locations_in_south_carolina/).
