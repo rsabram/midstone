@@ -89,40 +89,44 @@ school_info <- school_info %>%
   select(SID, school, district, location_type, total_enrollment, pct_male, pct_black, pct_white, pct_frl, rate_overall, rate_achievement, rate_gradrate, no_seniors_tested, pct_tested, erw_mean, math_mean, total_mean)
 
 school_info$district[156] <- 'Marion 10'
+# 
+# # merge school testing sites with school info (?)
+# sid <- school_info %>% 
+#   select(SID, school, district)
+# 
+# # clean test sites df to match formatting for school info
+# colnames(test_sites) <- c('number_times_offered','ceeb','school')
+# test_sites$school <- mapply(gsub, pattern = "HS", replacement = 'High School', test_sites$school)
+# test_sites$school <- mapply(gsub, pattern = "Sr", replacement = 'Senior', test_sites$school)
+# test_sites$school <- mapply(gsub, pattern = "Comp", replacement = 'Comprehensive', test_sites$school)
+# test_sites$school <- mapply(gsub, pattern = "Vly", replacement = 'Valley', test_sites$school)
+# 
+# # fuzzy join from ceeb to SID
+# ceeb_to_sid <- stringdist_left_join(test_sites, sid, by = 'school', max_dist = 1)
+# 
+# # manual add for missing values / fuzzy match didn't work
+# ceeb_to_sid$SID[51] <- 201002
+# ceeb_to_sid$SID[47] <- 405038
+# ceeb_to_sid$SID[68] <- 3901003
+# ceeb_to_sid$SID[31] <- 4001007
+# ceeb_to_sid$SID[64] <- 1101003
+# ceeb_to_sid$SID[43] <- 1001022
+# ceeb_to_sid$SID[25] <- 3410024
+# ceeb_to_sid$SID[42] <- 201012
+# 
+# testing_sites_clean <- ceeb_to_sid %>% 
+#   select(number_times_offered, SID) %>% 
+#   mutate(testing_site = 1) %>% 
+#   drop_na()
+# 
+# # NOTE - of the 68 testing sites, 6 are colleges and 4 are private schools, 1 is at voc
+# 
+# # merge testing site information with school info df
+# all_school_info <- left_join(school_info, testing_sites_clean, by = 'SID')
+# 
+# write.csv(all_school_info, "data/all_school_info.csv")
 
-# merge school testing sites with school info (?)
-sid <- school_info %>% 
-  select(SID, school, district)
-
-# clean test sites df to match formatting for school info
-colnames(test_sites) <- c('number_times_offered','ceeb','school')
-test_sites$school <- mapply(gsub, pattern = "HS", replacement = 'High School', test_sites$school)
-test_sites$school <- mapply(gsub, pattern = "Sr", replacement = 'Senior', test_sites$school)
-test_sites$school <- mapply(gsub, pattern = "Comp", replacement = 'Comprehensive', test_sites$school)
-test_sites$school <- mapply(gsub, pattern = "Vly", replacement = 'Valley', test_sites$school)
-
-# fuzzy join from ceeb to SID
-ceeb_to_sid <- stringdist_left_join(test_sites, sid, by = 'school', max_dist = 1)
-
-# manual add for missing values / fuzzy match didn't work
-ceeb_to_sid$SID[3] <- 201002
-ceeb_to_sid$SID[4] <- 405038
-ceeb_to_sid$SID[9] <- 3901003
-ceeb_to_sid$SID[15] <- 4001007
-ceeb_to_sid$SID[26] <- 1101003
-ceeb_to_sid$SID[27] <- 1001022
-ceeb_to_sid$SID[32] <- 3410024
-ceeb_to_sid$SID[45] <- 201012
-
-testing_sites_clean <- ceeb_to_sid %>% 
-  select(number_times_offered, SID) %>% 
-  mutate(testing_site = 1) %>% 
-  drop_na()
-
-# NOTE - of the 68 testing sites, 6 are colleges and 4 are private schools
-
-# merge testing site information with school info df
-all_school_info <- left_join(school_info, testing_sites_clean, by = 'SID')
+all_school_info <- read.csv("./data/all_school_info.csv")
 
 # replace NA with 0 for testing information
 all_school_info$number_times_offered[is.na(all_school_info$number_times_offered)] <- 0
@@ -131,11 +135,9 @@ all_school_info$no_seniors_tested[is.na(all_school_info$no_seniors_tested)] <- 0
 all_school_info$pct_tested[is.na(all_school_info$pct_tested)] <- 0
 
 # fix cell that calculated to Inf
-all_school_info[242,14] <- NA
+all_school_info[242,15] <- NA
 
 # CBHS is a testing site but has no students who have taken the SAT - code below adds that in 
-all_school_info[156,14] <- 0
-all_school_info[156,13] <- 0
 
 ## START ANALYSIS HERE ->
 
@@ -391,6 +393,11 @@ testing_sites <- all_school_info %>%
 not_testing_sites <- all_school_info %>% 
   filter(testing_site == 0)
 
+saveRDS(testing_sites, "data/testing_sites.RDS")
+
+saveRDS(not_testing_sites, "data/not_testing_sites.RDS")
+
+
 t.test(not_testing_sites$total_enrollment, testing_sites$total_enrollment)
 
 t.test(not_testing_sites$pct_male, testing_sites$pct_male)
@@ -497,7 +504,7 @@ testing_site_t_tests$mean_not_testing_sites<-testing_site_t_tests$mean_not_testi
 testing_site_t_tests$mean_testing_sites<-testing_site_t_tests$mean_testing_sites %>% 
   round(2)
 
-saveRDS(testing_site_t_tests, "data/testing_site_t_tests.RDS")
+#saveRDS(testing_site_t_tests, "data/t_tests.RDS")
 
 shiny_dt <- all_school_info %>% 
   select(school, district, location_type, total_enrollment, pct_frl, pct_tested, testing_site) %>% 
@@ -518,7 +525,9 @@ shiny_dt$pct_tested <- shiny_dt$pct_tested %>%
 
 colnames(shiny_dt) <- c('School','District','Location Type','Total Enrollment','Percent Free/Reduced Lunch','Percent Tested','SAT Testing Site')
 
+#saveRDS(shiny_dt, "data/shiny_dt.RDS")
+
 reshape_pcts[,3] <- reshape_pcts[,3] * 100
 
-saveRDS(reshape_pcts, "data/averages_by_site_and_location.RDS")
+#saveRDS(reshape_pcts, "data/averages_by_site_and_location.RDS")
 

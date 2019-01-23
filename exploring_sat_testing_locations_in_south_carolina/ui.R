@@ -73,10 +73,14 @@ dashboardPage(
       tabItem(tabName = "t_tests",
               fluidPage(
                 sidebarLayout(
-                  sidebarPanel(h4('Run a t-test to determine if there is a statistically significant difference in demographic groups, school quality, or SAT scores for high schools that are testing sites vs. those that are not.'),
+                  sidebarPanel(
+                    fluidRow(h4('Run a t-test to determine if there is a statistically significant difference in demographic groups, school quality, or SAT scores for high schools that are testing sites vs. those that are not.'),
                   selectInput("ttestVar", label = ("Select a variable:"), 
                             choices = list("Total SAT Score" = "total_score", "Reading SAT Score" = "erw_score", "Math SAT Score" = "math_score", "Total Enrollment" = "total_enrollment", "Male Student Percentage" = "pct_male", "Black Student Percentage" = "pct_black", "White Student Percentage" = "pct_white", "Percentage of Students Receiving Free or Reduced Lunch" = "pct_frl", "Percentage of Seniors who Took the SAT" = "pct_tested", "Overall School Rating" = "overall_rating", "School Achievement Rating" = "achievement_rating", "School Graduation Rate Rating" = "gradrate_rating"), 
                             selected = 1), color = "green", width = 8
+              ),
+                  fluidRow(strong('Wait - what is a t-test?')),
+                 fluidRow("Here, a t-test compares the means of a specific variable across two different populations - schools that are testing sites vs. schools that are not. It evaluates the two averages, and calculates a p-value for the comparison. A higher p-value means there is not a large difference between the means of the two groups, and a lower p-value means there is a significant difference between the means of the two groups. A p value lower than 0.05 is considered significant. Learn more about t-tests", link <- a('here.', href = 'https://www.khanacademy.org/math/ap-statistics/two-sample-inference/two-sample-t-test-means/v/two-sample-t-test-for-difference-of-means', target="_blank"))
               ),
               mainPanel(
               fluidRow(valueBoxOutput("testing_average", width = 8)),
