@@ -81,7 +81,7 @@ dashboardPage(
                             selected = 1), color = "green", width = 8
               ),
                   fluidRow(strong('Wait - what is a t-test?')),
-                 fluidRow("Here, a t-test compares the means of a specific variable across two different populations - schools that are testing sites vs. schools that are not. It evaluates the two averages, and calculates a p-value for the comparison. A higher p-value means there is not a large difference between the means of the two groups, and a lower p-value means there is a significant difference between the means of the two groups. A p value lower than 0.05 is considered significant. Learn more about t-tests", link <- a('here.', href = 'https://www.khanacademy.org/math/ap-statistics/two-sample-inference/two-sample-t-test-means/v/two-sample-t-test-for-difference-of-means', target="_blank"))
+                 fluidRow("Here, a t-test compares the averages of a specific variable (such as total SAT score) across two different populations - schools that are testing sites vs. schools that are not. It compares the two averages, and calculates a p-value for the comparison. A higher p-value means there is not a large difference between the averages of the two groups, and a lower p-value means there is a significant difference between the averages of the two groups. A p value lower than 0.05 is considered significant. Learn more about t-tests", link <- a('here.', href = 'https://www.khanacademy.org/math/ap-statistics/two-sample-inference/two-sample-t-test-means/v/two-sample-t-test-for-difference-of-means', target="_blank"))
               ),
               mainPanel(
               fluidRow(valueBoxOutput("testing_average", width = 8)),
