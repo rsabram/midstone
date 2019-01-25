@@ -41,8 +41,20 @@ frl$frl_enrollment <- as.numeric(frl$frl_enrollment)
 frl$SID <- as.numeric(frl$SID)
 
 # add column for pct frl
-frl_clean <- frl %>% 
-  mutate(pct_frl = frl_enrollment/total_enrollment)
+frl_2014 <- frl %>% 
+  mutate(pct_frl_wrong = frl_enrollment/total_enrollment)
+
+frl_2018 <- read_csv('./data/frl_2018.csv') %>% 
+  select(District, BEDS, School, index)
+
+colnames(frl_2018) <- c('district', 'SID', 'school', 'poverty_index')
+frl_2018$SID <- as.numeric(frl_2018$SID)
+
+frl_2018 <- frl_2018 %>% 
+  mutate(pct_frl = poverty_index / 100)
+
+frl_clean <- left_join(frl_2018, frl_2014, by = 'SID') %>% 
+  select('SID','school.x','pct_frl','location_type')
 
 # read in and clean test sites
 test_sites <- read_csv('./data/sat_locations.csv') %>% 
@@ -80,18 +92,18 @@ school_info <- left_join(merge_2, frl_clean, by = 'SID')
 
 # clean the merge
 school_info <- school_info %>% 
-  select(-district, -school, -no_seniors, -black, -ai, -white, -aa, -hispanic, -hawaiian, -two_or_more, -total_enrollment, -frl_enrollment, -female) %>% 
+  select(-no_seniors, -black, -ai, -white, -aa, -hispanic, -hawaiian, -two_or_more, -female) %>% 
   mutate(pct_male = male/total) %>% 
   select(-male)
 
-colnames(school_info) <- c('school','SID','rate_overall','rate_achievement','rate_gradrate', 'district','no_seniors_tested','pct_tested','erw_mean','math_mean','total_mean','total_enrollment','pct_black','pct_white', 'location_type','pct_frl','pct_male')
+colnames(school_info) <- c('school','SID','rate_overall','rate_achievement','rate_gradrate', 'district','no_seniors_tested','pct_tested','erw_mean','math_mean','total_mean','total_enrollment','pct_black','pct_white', 'drop_me','pct_frl','location_type','pct_male')
 school_info <- school_info %>% 
   select(SID, school, district, location_type, total_enrollment, pct_male, pct_black, pct_white, pct_frl, rate_overall, rate_achievement, rate_gradrate, no_seniors_tested, pct_tested, erw_mean, math_mean, total_mean)
 
 school_info$district[156] <- 'Marion 10'
-# 
+
 # # merge school testing sites with school info (?)
-# sid <- school_info %>% 
+# sid <- school_info %>%
 #   select(SID, school, district)
 # 
 # # clean test sites df to match formatting for school info
@@ -114,9 +126,9 @@ school_info$district[156] <- 'Marion 10'
 # ceeb_to_sid$SID[25] <- 3410024
 # ceeb_to_sid$SID[42] <- 201012
 # 
-# testing_sites_clean <- ceeb_to_sid %>% 
-#   select(number_times_offered, SID) %>% 
-#   mutate(testing_site = 1) %>% 
+# testing_sites_clean <- ceeb_to_sid %>%
+#   select(number_times_offered, SID) %>%
+#   mutate(testing_site = 1) %>%
 #   drop_na()
 # 
 # # NOTE - of the 68 testing sites, 6 are colleges and 4 are private schools, 1 is at voc
@@ -504,7 +516,7 @@ testing_site_t_tests$mean_not_testing_sites<-testing_site_t_tests$mean_not_testi
 testing_site_t_tests$mean_testing_sites<-testing_site_t_tests$mean_testing_sites %>% 
   round(2)
 
-#saveRDS(testing_site_t_tests, "data/t_tests.RDS")
+saveRDS(testing_site_t_tests, "data/t_tests.RDS")
 
 shiny_dt <- all_school_info %>% 
   select(school, district, location_type, total_enrollment, pct_frl, pct_tested, testing_site) %>% 
@@ -525,9 +537,9 @@ shiny_dt$pct_tested <- shiny_dt$pct_tested %>%
 
 colnames(shiny_dt) <- c('School','District','Location Type','Total Enrollment','Percent Free/Reduced Lunch','Percent Tested','SAT Testing Site')
 
-#saveRDS(shiny_dt, "data/shiny_dt.RDS")
+saveRDS(shiny_dt, "data/shiny_dt.RDS")
 
 reshape_pcts[,3] <- reshape_pcts[,3] * 100
 
-#saveRDS(reshape_pcts, "data/averages_by_site_and_location.RDS")
+saveRDS(reshape_pcts, "data/averages_by_site_and_location.RDS")
 

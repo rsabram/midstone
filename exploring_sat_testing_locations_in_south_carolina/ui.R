@@ -26,12 +26,13 @@ dashboardPage(
                                h4('Is there a statistically significant difference in demographic groups, school quality, or SAT scores for high schools that are testing sites vs. those that are not?
                                   '),
                                h3(strong('Data Sources')),
+                               h5(em('*all data is from 2018')),
                                h4(tags$ul(
                                  tags$li(locations <- a("SAT Testing Locations", href="https://collegereadiness.collegeboard.org/pdf/sat-domestic-code-list.pdf", target="_blank")),
                                  tags$li(report_card <- a("SC Report Cards", href="https://screportcards.com/", target="_blank")),
                                  tags$li(sat_scores <- a("SAT Scores by School", href="https://ed.sc.gov/data/test-scores/national-assessments/sat/", target="_blank")),
                                  tags$li(enrollment <- a("School Enrollment by Gender and Race", href="https://ed.sc.gov/data/other/student-counts/active-student-headcounts/", target="_blank")),
-                                 tags$li(frl_rate <- a("School E-Rate (FRL Percentages)", href="https://ed.sc.gov/data/other/", target="_blank"))
+                                 tags$li(frl_rate <- a("School Poverty Index", href="https://screportcards.com/", target="_blank"))
                                  )
                                  ),
                                width = 12),
