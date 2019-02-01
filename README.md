@@ -33,3 +33,25 @@ We underestimate the role that privilege plays. My kids don’t have their own c
 
 ### Key Findings
 
+Creek Bridge Middle High School is the only SAT Testing Site where **0% of seniors** have taken the SAT.
+
+Rural Testing Sites and Urban Non-Testing sites have nearly **the same percentage** of seniors who have taken the SAT.
+
+Rural, Non-Testing Sites have an **12% higher** percentage of students receiving free or reduced lunch than Urban Testing Sites.
+
+There are three variables that are statistically significantly different between non-testing sites and testing sites.
+1. Percentage of Seniors Taking the SAT
+2. Total School Enrollment
+3. Graduation Rate Rating
+
+### Further Research
+
+South Carolina recently passed the following amendment to their Education Accountability Act:
+
+> SECTION 59-18-325. College and career readiness assessment; summative assessment.
+> (A) Beginning in eleventh grade for the first time in School Year 2017-2018 and subsequent years, all students must be offered a college entrance assessment that is from a provider secured by the department. In addition, all students entering the eleventh grade for the first time in School Year 2017-2018 and subsequent years must be administered a career readiness assessment. 
+
+South Carolina chose the ACT as the "college entrance assessment that is from a provider secured by the department." It would be interesting to research how this shift has impacted the volume of SAT and ACT test takers and the availability of testing locations.
+
+Additionally, I was unable to locate recent, publicly available data on percent of students with Individualized Education Program (IEP) at each high school. I would like to investigate to see if there is a statistically significant difference between the percentage of students with an IEP at testing sites vs. non-testing sites in order to ensure that students with disabilities have equal accessibility to SAT testing sites.
+
