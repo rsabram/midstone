@@ -25,9 +25,9 @@ We underestimate the role that privilege plays. My kids don’t have their own c
 ### Data Sources
 #### All data is from 2018.
 
-- [SAT Testing Locations] (https://collegereadiness.collegeboard.org/pdf/sat-domestic-code-list.pdf)
-- [SC Report Cards] (https://screportcards.com/)
-- [SAT Scores by School] (https://ed.sc.gov/data/test-scores/national-assessments/sat/)
-- [School Enrollment by Gender and Race] (https://ed.sc.gov/data/other/student-counts/active-student-headcounts/)
-- [School Poverty Index] (https://screportcards.com/)
+- [SAT Testing Locations](https://collegereadiness.collegeboard.org/pdf/sat-domestic-code-list.pdf)
+- [SC Report Cards](https://screportcards.com/)
+- [SAT Scores by School](https://ed.sc.gov/data/test-scores/national-assessments/sat/)
+- [School Enrollment by Gender and Race](https://ed.sc.gov/data/other/student-counts/active-student-headcounts/)
+- [School Poverty Index](https://screportcards.com/)
 
