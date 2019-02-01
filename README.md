@@ -1,8 +1,9 @@
 # Exploring SAT Testing Locations in South Carolina
 
-### Executive Summary
+### Shiny Dashboard
+View and interact with the Shiny Dashboard [here](https://rabram.shinyapps.io/exploring_sat_testing_locations_in_south_carolina/).
 
-Through my time as an educator, I have developed a passion for expanding access to higher education for students from low income backgrounds. In my work in South Carolina I saw my students face obstacle after obstacle when it came to merely applying for college.  It wasn’t just a matter of funds - they didn’t have internet access at home to complete applications, or didn’t have a credit card to register for the SAT. In my midstone project, I want to explore a possible correlation between the locations of SAT testing sites and assorted demographic and social determinant factors. I anticipate that I will find that large, urban, wealthy counties will have the bulk of the testing sites. I will use various data sets from the South Carolina Department of Education, US Census, and College Board to explore this hypothesis. 
+### Motivation
 
 From 2014-2016, I taught high school math and computer science in rural South Carolina. I taught primarily juniors and seniors, and as a wide-eyed Teach for America corps member I was determined to ensure 100% of my students could apply, attend, and graduate from college. I quickly realized this was not reality for my students - about 30% of the graduating class attended college after graduation and 30% of that population would go on to complete their degree. One particular barrier to higher education that concerned me was access to a testing location for the ACT or SAT. These tests are required for admittance to colleges and universities, and often a prerequisite for scholarships. 
 
@@ -13,23 +14,20 @@ Two of them overslept. Another two were supposed to carpool, but the brother who
 We underestimate the role that privilege plays. My kids don’t have their own car to drive themselves. Their parents work on Saturdays so they can’t drive them, and they leave too early to wake them up. There’s no Uber (and no credit card to pay for the uber) or public transportation and it’s not within walking distance. The closest place they could take the ACT was 45 minutes away. It is and it was stupid things like that that gets in the way for my kids. They want to succeed, to go to college, to take the ACT, to do well, but it’s the simple things like having an ACT test center down the road that we are too privileged to recognize as advantages that are the obstacles for my kids. I researched SAT and ACT testing locations because I saw that access to testing sites was an obstacle for my students to access higher education.
 
 
-### Motivation
+### Data Questions
 
-From 2014-2016, I taught high school math and computer science in rural South Carolina. I taught primarily juniors and seniors, and as a wide-eyed Teach for America corps member I was determined to ensure 100% of my students could apply, attend, and graduate from college. I quickly realized this was not reality for my students - about 30% of the graduating class attended college after graduation and 30% of that population would go on to complete their degree. One particular barrier to higher education that concerned me was access to a testing location for the ACT or SAT. These tests are required for admittance to colleges and universities, and often a prerequisite for scholarships. The closest testing centers to my students were an hour away. I remember waking up at 5:30 a.m. on a Saturday to drive one of my students from his house to a testing center, and then to pick him up again after he finished to drive him home. I want to investigate the locations of SAT testing centers in South Carolina to identify possible trends and the impact of limited testing centers in rural locations. 
+1. Is there a difference in **demographic groups** for high schools that are:
+- **Rural vs. Urban**
+- **Testing Sites vs. Non Testing Sites**
 
-### Data Question
+2. Is there a statistically significant difference in **demographic groups, school quality, or SAT scores** for high schools that are testing sites vs. those that are not?
 
-Where are SAT testing centers in South Carolina? Are they in rural or urban locations? What are the demographic populations of the high schools designated as testing locations? What are the average SAT scores of students at schools that double as testing locations? Do counties with few testing locations have lower college graduation rates or lower high school graduation rates?
+### Data Sources
+#### All data is from 2018.
 
-Based on my experience and prior knowledge, I would hypothesize that SAT testing centers are located in both counties and high schools with the following characteristics:
-- Urban 
-- High SAT scores
-- High high school graduation percentage
-- Large student population
-- Low non-white population
-- Low special education population
-- Low free and reduced lunch population
-- Low unemployment rate
+- [SAT Testing Locations] (https://collegereadiness.collegeboard.org/pdf/sat-domestic-code-list.pdf)
+- [SC Report Cards] (https://screportcards.com/)
+- [SAT Scores by School] (https://ed.sc.gov/data/test-scores/national-assessments/sat/)
+- [School Enrollment by Gender and Race] (https://ed.sc.gov/data/other/student-counts/active-student-headcounts/)
+- [School Poverty Index] (https://screportcards.com/)
 
-### Shiny Dashboard
-View and interact with the Shiny Dashboard [here](https://rabram.shinyapps.io/exploring_sat_testing_locations_in_south_carolina/).
