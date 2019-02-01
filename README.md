@@ -23,11 +23,13 @@ We underestimate the role that privilege plays. My kids don’t have their own c
 2. Is there a statistically significant difference in **demographic groups, school quality, or SAT scores** for high schools that are testing sites vs. those that are not?
 
 ### Data Sources
-#### All data is from 2018.
+*All data is from 2018.*
 
 - [SAT Testing Locations](https://collegereadiness.collegeboard.org/pdf/sat-domestic-code-list.pdf)
 - [SC Report Cards](https://screportcards.com/)
 - [SAT Scores by School](https://ed.sc.gov/data/test-scores/national-assessments/sat/)
 - [School Enrollment by Gender and Race](https://ed.sc.gov/data/other/student-counts/active-student-headcounts/)
 - [School Poverty Index](https://screportcards.com/)
+
+### Key Findings
 
